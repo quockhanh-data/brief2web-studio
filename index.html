@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Brief2Web Studio - dự án tổng cho các website tĩnh đặt theo yêu cầu, review nhanh, deploy GitHub Pages, sẵn sàng nối domain."
+    />
+    <title>Brief2Web Studio | Order web theo yêu cầu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" data-header>
+      <a class="brand" href="#home" aria-label="Brief2Web Studio">
+        <span class="brand-mark">B2W</span>
+        <span>
+          <strong>Brief2Web Studio</strong>
+          <small>Order web theo yêu cầu</small>
+        </span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-label="Mở menu" aria-expanded="false" data-menu-toggle>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav-links" data-nav>
+        <a href="#services">Dịch vụ</a>
+        <a href="#process">Quy trình</a>
+        <a href="#projects">Dự án</a>
+        <a href="#deploy">Deploy</a>
+      </nav>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <img class="hero-bg" src="assets/brief2web-hero.jpg" alt="Brief2Web project dashboard" />
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Static web studio</p>
+          <h1>Order web theo yêu cầu</h1>
+          <p>
+            Dự án tổng để quản lý các website tĩnh: mỗi khách hàng hoặc CLB là một nhánh riêng,
+            dễ review, dễ deploy, dễ nối domain sau này.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#projects">Xem dự án mẫu</a>
+            <a class="button ghost" href="#process">Xem quy trình</a>
+          </div>
+        </div>
+        <aside class="hero-strip" aria-label="Năng lực chính">
+          <span>Static-first</span>
+          <span>GitHub Pages</span>
+          <span>Domain-ready</span>
+        </aside>
+      </section>
+
+      <section class="intro">
+        <div class="container intro-grid">
+          <div>
+            <p class="section-kicker">Ý tưởng repo</p>
+            <h2>Một repo tổng, nhiều nhánh demo theo từng đơn web.</h2>
+          </div>
+          <p>
+            `main` giữ trang giới thiệu dịch vụ. Các nhánh như `yvoice-insight-hub` giữ từng bản
+            website riêng để khách xem, góp ý và chốt hướng thiết kế.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="services">
+        <div class="container">
+          <div class="section-heading">
+            <p class="section-kicker">Dịch vụ</p>
+            <h2>Làm nhanh bản tĩnh để khách thấy được web thật.</h2>
+          </div>
+          <div class="service-grid">
+            <article>
+              <span>01</span>
+              <h3>Website CLB, đội nhóm</h3>
+              <p>Giới thiệu, hoạt động, tuyển thành viên, bài viết và liên hệ.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Landing page sự kiện</h3>
+              <p>Thông tin chương trình, timeline, CTA đăng ký và bộ nhận diện riêng.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Trang tin, tập san</h3>
+              <p>Bố cục magazine, danh mục nội dung, bài nổi bật và tìm kiếm cơ bản.</p>
+            </article>
+            <article>
+              <span>04</span>
+              <h3>Portfolio cá nhân</h3>
+              <p>Profile, dự án, năng lực, liên hệ và giao diện hợp ngành.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section dark" id="process">
+        <div class="container process-grid">
+          <div>
+            <p class="section-kicker">Quy trình</p>
+            <h2>Từ brief đến link review.</h2>
+          </div>
+          <ol class="steps">
+            <li>
+              <strong>Nhận brief</strong>
+              <span>Nội dung, logo, màu sắc, web tham khảo, mục tiêu người xem.</span>
+            </li>
+            <li>
+              <strong>Dựng prototype</strong>
+              <span>HTML/CSS/JS tĩnh, responsive, có asset và bố cục thật.</span>
+            </li>
+            <li>
+              <strong>Review theo nhánh</strong>
+              <span>Mỗi đơn nằm ở một branch, dễ so sánh và không đụng bản tổng.</span>
+            </li>
+            <li>
+              <strong>Deploy</strong>
+              <span>Đẩy GitHub Pages hoặc chuyển sang hosting/domain chính.</span>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section projects" id="projects">
+        <div class="container">
+          <div class="section-heading">
+            <p class="section-kicker">Dự án trong repo</p>
+            <h2>Nhánh demo hiện có.</h2>
+          </div>
+          <article class="project-row">
+            <div>
+              <p class="project-label">Branch</p>
+              <h3>yvoice-insight-hub</h3>
+              <p>
+                Website tĩnh Y-VOICE | Tiếng nói lý luận trẻ, thiết kế theo logo và bìa CLB.
+              </p>
+            </div>
+            <code>git switch yvoice-insight-hub</code>
+          </article>
+        </div>
+      </section>
+
+      <section class="section deploy" id="deploy">
+        <div class="container deploy-panel">
+          <div>
+            <p class="section-kicker">Deploy</p>
+            <h2>Main là dự án tổng. Nhánh riêng là web khách.</h2>
+            <p>
+              Khi cần cho khách xem, có thể deploy branch tương ứng qua GitHub Pages hoặc tạo repo
+              riêng từ branch đã chốt.
+            </p>
+          </div>
+          <div class="command-list">
+            <code>git branch</code>
+            <code>git switch yvoice-insight-hub</code>
+            <code>git switch main</code>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <p>Brief2Web Studio</p>
+        <p>Static web orders, branch-based previews, domain-ready handoff.</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
