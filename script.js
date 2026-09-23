@@ -51,3 +51,37 @@ filters.forEach((button) => {
 });
 
 search?.addEventListener("input", filterCards);
+
+const dropdown = document.querySelector('[data-dropdown]');
+const dropdownButton = dropdown.querySelector('button');
+const panel = dropdown.querySelector('.dropdown-panel');
+function toggleDropdown(open) {
+  dropdownButton.setAttribute('aria-expanded', String(open));
+  panel.hidden = !open;
+}
+dropdownButton.addEventListener('click', () => toggleDropdown(panel.hidden));
+dropdown.addEventListener('mouseenter', () => {
+  if (matchMedia('(hover: hover) and (min-width: 941px)').matches) toggleDropdown(true);
+});
+dropdown.addEventListener('mouseleave', () => {
+  if (!dropdown.contains(document.activeElement)) toggleDropdown(false);
+});
+dropdown.addEventListener('focusout', (event) => {
+  if (!dropdown.contains(event.relatedTarget)) toggleDropdown(false);
+});
+dropdownButton.addEventListener('keydown', (event) => {
+  if (event.key === 'ArrowDown') { event.preventDefault(); toggleDropdown(true); panel.querySelector('a').focus(); }
+});
+document.addEventListener('click', (event) => {
+  if (!dropdown.contains(event.target)) toggleDropdown(false);
+  if (!header.contains(event.target)) closeMenu();
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    if (!panel.hidden) { toggleDropdown(false); dropdownButton.focus(); }
+    else { closeMenu(); menuToggle.focus(); }
+  }
+});
+nav.addEventListener('click', (event) => {
+  if (event.target.closest('a')) { toggleDropdown(false); closeMenu(); }
+});

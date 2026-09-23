@@ -5,3 +5,6 @@ desktop.ini
 node_modules/
 .env
 .env.*
+!.env.example
+dist/
+test-results/

@@ -26,17 +26,25 @@
         </span>
       </a>
 
-      <button class="menu-toggle" type="button" aria-label="Mở menu" aria-expanded="false" data-menu-toggle>
+      <button class="menu-toggle" type="button" aria-controls="navigation" aria-label="Mở menu" aria-expanded="false" data-menu-toggle>
         <span></span>
         <span></span>
         <span></span>
       </button>
 
-      <nav class="nav-links" data-nav>
+      <nav class="nav-links" id="navigation" aria-label="Menu chính" data-nav>
         <a href="#about">Giới thiệu</a>
-        <a href="#direction">Định hướng</a>
         <a href="#activities">Hoạt động</a>
         <a href="#news">Bảng tin</a>
+        <div class="nav-dropdown" data-dropdown>
+          <button type="button" class="dropdown-toggle" aria-expanded="false" aria-controls="contributor-menu">Cộng Tác Viên <span aria-hidden="true">▾</span></button>
+          <div class="dropdown-panel" id="contributor-menu" hidden>
+            <a href="#/contributor">Gửi bài viết</a>
+            <a href="#/writing-guide">Hướng dẫn viết bài</a>
+            <a href="#/citations">Cách trích nguồn</a>
+            <a href="mailto:insightyouthvoiceclub@gmail.com">Liên hệ ban biên tập</a>
+          </div>
+        </div>
         <a href="#contact">Liên hệ</a>
       </nav>
     </header>
@@ -78,7 +86,8 @@
         </div>
       </section>
 
-      <section class="section" id="about">
+      <section id="about" aria-label="Giới thiệu">
+      <section class="section">
         <div class="container split">
           <div class="section-copy">
             <p class="section-kicker">Chúng mình là ai?</p>
@@ -109,7 +118,7 @@
       <section class="section muted" id="direction">
         <div class="container">
           <div class="section-heading">
-            <p class="section-kicker">Chúng mình theo đuổi điều gì?</p>
+            <p class="section-kicker">Định hướng</p>
             <h2>Hiểu sâu để nói đúng. Có tri thức để tạo ảnh hưởng.</h2>
           </div>
 
@@ -153,6 +162,16 @@
         </div>
       </section>
 
+      <section class="section muted" id="leadership">
+        <div class="container"><p class="section-kicker">Con người Y-VOICE</p><h2>Ban Chủ nhiệm</h2>
+          <div class="leadership-grid">
+            <!-- TODO: Add verified chair and vice-chair names, portraits and biographies from the club. -->
+            <article class="info-card"><h3>Chủ nhiệm</h3><p>Thông tin đang được cập nhật.</p></article>
+            <article class="info-card"><h3>Phó Chủ nhiệm</h3><p>Thông tin đang được cập nhật.</p></article>
+          </div>
+        </div>
+      </section>
+      </section>
       <section class="section dark" id="activities">
         <div class="container">
           <div class="section-heading">
@@ -239,7 +258,7 @@
                   Một góc nhìn nhập môn về cách sinh viên có thể xây dựng lập luận trước khi phát
                   biểu quan điểm.
                 </p>
-                <a href="#contact">Đọc bản nháp</a>
+                <p class="draft-note">Nội dung giới thiệu • Chưa có bản đọc công khai.</p>
               </div>
             </article>
 
@@ -283,22 +302,24 @@
           <div class="contact-list">
             <a href="mailto:insightyouthvoiceclub@gmail.com">insightyouthvoiceclub@gmail.com</a>
             <a href="tel:0901722998">0901722998 - Đức Phúc</a>
-            <a href="https://www.facebook.com/profile.php?id=61574512915575">Insight YouthVoice</a>
+            <a href="https://www.facebook.com/profile.php?id=61574512915575" target="_blank" rel="noopener noreferrer">Insight YouthVoice</a>
           </div>
         </div>
       </section>
     </main>
 
+    <main id="app-page" class="app-page" hidden tabindex="-1"></main>
     <footer class="site-footer">
       <div class="container footer-grid">
         <div>
           <img src="assets/yvoice-logo.png" alt="Insight YouthVoice" />
           <p>Y-VOICE | Tiếng nói lý luận trẻ</p>
         </div>
-        <p>#YVOICE #TiengNoiLyLuanTre #InsightYouthVoiceClub #Hocthuat</p>
+        <div class="footer-social"><a href="https://www.facebook.com/profile.php?id=61574512915575" target="_blank" rel="noopener noreferrer">Facebook Y-VOICE ↗</a><a href="mailto:insightyouthvoiceclub@gmail.com">Gửi email cho CLB</a></div>
       </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
+    <script type="module" src="app.js"></script>
   </body>
 </html>
