@@ -933,3 +933,11 @@ p {
     flex-direction: column;
   }
 }
+.field-error { display:block; color:#a31323; font-size:.85rem; margin-top:4px; }
+.field-error:empty { display:none; }
+.article-form .consent { display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap; }
+.article-form .consent input { width:20px; flex:0 0 20px; margin-top:5px; }
+.article-form .consent span { flex:1; }
+.honeypot { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
+.article-form [aria-invalid="true"] { border-color:#a31323; }
+.article-form button:disabled { opacity:.65; cursor:wait; }

@@ -1,27 +1,21 @@
-# Gửi bài Y-VOICE qua email
+# Y-VOICE — FormSubmit
 
-Người nhận: insightyouthvoiceclub@gmail.com.
+Form gửi JSON bằng POST đến https://formsubmit.co/ajax/insightyouthvoiceclub@gmail.com. Không cần tài khoản, database, khóa API hoặc backend. Chỉ hiển thị thành công khi HTTP thành công và dịch vụ trả success=true. Lỗi mạng, HTTP, JSON hoặc success=false hiển thị lỗi, giữ nội dung để thử lại. Phản hồi yêu cầu kích hoạt không hiển thị thành công.
 
-Không cần Supabase, tài khoản, API key hay backend. Nút mở email điền sẵn tiêu đề/nội dung qua mailto. Người dùng phải bấm Gửi trong ứng dụng email. Website không thể xác nhận thư được gửi hoặc CLB đã nhận.
+Không upload file: dùng link tài liệu Google Drive/Word/PDF, hoặc gửi file bằng email trực tiếp. Form có honeypot, kiểm tra bắt buộc, email, link và checkbox; chống gửi lặp khi request đang chạy. Honeypot không thay thế hệ thống chống spam của nhà cung cấp.
 
-Bài dài có thể vượt giới hạn mailto của trình duyệt/ứng dụng. Form cung cấp sao chép nội dung và tải .txt; người dùng gửi email thủ công hoặc chia sẻ link tài liệu. Word/PDF được đính kèm trong ứng dụng email. Form không lưu dữ liệu khi reload/rời trang.
+## Kích hoạt lần đầu
+1. Đưa mã lên nhánh yvoice-insight-hub, GitHub Pages /root.
+2. Gửi một bài kiểm tra từ website công khai.
+3. Mở insightyouthvoiceclub@gmail.com (cả Spam), xác nhận email Activate Form từ FormSubmit. Không chia sẻ link kích hoạt công khai.
+4. Gửi lại một bài kiểm tra và xác nhận email đến, tiêu đề, nội dung và link tài liệu đúng. Chưa thể xác nhận nhận email nếu chưa hoàn thành bước này.
 
-## Các trang
+Phản hồi success của dịch vụ xác nhận dịch vụ chấp nhận request; không chứng minh email đã đến Inbox. Nếu cần chẩn đoán, kiểm tra Spam và trạng thái dịch vụ. Tài liệu nhà cung cấp: https://formsubmit.co/ajax-documentation và https://formsubmit.co/.
 
-- `#/contributor`: form gửi bài.
-- `#/writing-guide`: gợi ý viết bài, chưa phải quy định chính thức.
-- `#/citations`: ví dụ trích dẫn tham khảo.
+## Kiểm tra
+npm install
+npm test
+npm run build
+node tests/browser-check.mjs
 
-Không có đăng nhập hoặc database. Bài gửi không tự đăng lên bảng tin; CLB tiếp nhận, duyệt và đăng riêng.
-
-## Kiểm tra và xuất bản
-
-Chạy `npm install`, `npm test`, `npm run build`. Không có lint được cấu hình trước đó.
-
-Các file HTML/CSS/JS gốc vẫn chạy trực tiếp trên GitHub Pages, không bắt buộc Actions. Giữ Pages ở branch `yvoice-insight-hub`, thư mục `/ (root)`. Commit/push mã nguồn vào đúng branch này. Nếu dùng hosting khác, có thể dùng thư mục `dist` được tạo bởi Vite.
-
-Không dùng nội dung thư hoặc tên tác giả làm HTML. mailto mã hóa riêng subject/body để bảo toàn dấu tiếng Việt và ký tự đặc biệt.
-
-## Còn cần nội dung từ CLB
-
-Tên, ảnh, tiểu sử Chủ nhiệm/Phó Chủ nhiệm và hướng dẫn viết/trích nguồn chính thức. TODO được đặt trong source; chưa tự điền thông tin không xác thực.
+Browser tests chặn/mô phỏng phản hồi nhà cung cấp, không gửi thư thử. Chưa kiểm tra nhận thư thực tế vì cần người quản lý hộp thư kích hoạt và xác nhận. Không có lint trong dự án.

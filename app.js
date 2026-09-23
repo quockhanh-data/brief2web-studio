@@ -1,23 +1,28 @@
-import { composeArticle, recipient } from './email.js';
+import { recipient, submitArticle } from './submission.js';
 
 const home = document.querySelector('#home');
 const page = document.querySelector('#app-page');
 const pages = {
   '/contributor': {
     title: 'Gửi bài viết',
-    content: `<p class="page-intro">Chia sẻ góc nhìn của bạn với Y-VOICE. Bài viết được gửi tới <a href="mailto:${recipient}">${recipient}</a> qua email, không cần tài khoản.</p>
-    <div class="notice"><strong>Gửi bằng ứng dụng email của bạn</strong><p>Điền bài viết, sau đó mở email và bấm Gửi trong ứng dụng email. Website không tự gửi hay xác nhận đã nhận bài.</p></div>
-    <form id="article-form" class="article-form">
-      <div class="form-row"><label>Họ và tên<input name="author" autocomplete="name" required maxlength="120"></label><label>Email liên hệ<input name="email" type="email" autocomplete="email" required maxlength="254"></label></div>
-      <label>Tiêu đề bài viết<input name="title" required maxlength="200"></label>
-      <label>Chủ đề<select name="category"><option>Tập san</option><option>Podcast</option><option>Sự kiện</option><option>Kỹ năng</option><option>Khác</option></select></label>
-      <label>Nội dung bài viết<textarea name="content" rows="12" required maxlength="100000" aria-describedby="content-help"></textarea></label>
-      <p id="content-help" class="field-help">Bài dài: nên đặt trong Google Docs hoặc tài liệu chia sẻ, rồi điền phần tóm tắt ở đây. Bạn có thể đính kèm Word/PDF trong ứng dụng email.</p>
-      <label>Link nguồn tham khảo / tài liệu (không bắt buộc)<input name="reference" type="url" placeholder="https://…" maxlength="2048"></label>
-      <div class="form-actions"><button class="button primary" type="submit">Mở email để gửi bài</button><button class="button secondary" type="button" id="copy-article">Sao chép nội dung email</button><button class="button secondary" type="button" id="download-article">Tải nội dung .txt</button></div>
-      <p id="form-status" role="status" aria-live="polite"></p>
+    content: `<p class="page-intro">Chia sẻ góc nhìn của bạn với Y-VOICE. Không cần tài khoản.</p>
+    <form id="article-form" class="article-form" action="https://formsubmit.co/ajax/insightyouthvoiceclub@gmail.com" method="POST" novalidate>
+      <div class="form-row"><label>Họ và tên *<input name="name" autocomplete="name" required maxlength="120"></label><label>Email liên hệ *<input name="email" type="email" autocomplete="email" required maxlength="254"></label></div>
+      <label>Số điện thoại<input name="phone" type="tel" autocomplete="tel" maxlength="30"></label>
+      <label>Tiêu đề bài viết *<input name="title" required maxlength="200"></label>
+      <label>Chủ đề / Chuyên mục *<select name="category" required><option value="">Chọn chuyên mục</option><option>Tập san</option><option>Podcast</option><option>Sự kiện</option><option>Kỹ năng</option><option>Khác</option></select></label>
+      <label>Nội dung / Mô tả bài viết *<textarea name="content" rows="12" required maxlength="50000"></textarea></label>
+      <label>Nguồn tham khảo<textarea name="references" rows="3" maxlength="5000"></textarea></label>
+      <label>Link tài liệu Google Drive / Word / PDF<input name="document" type="url" placeholder="https://…" maxlength="2048"></label>
+      <p class="field-help">Thay cho đính kèm file, hãy dán link tài liệu và cấp quyền xem cho Ban Biên tập. Bạn cũng có thể gửi file trực tiếp qua email CLB.</p>
+      <label class="consent"><input type="checkbox" name="confirmation" required> <span>Tôi xác nhận nội dung gửi là do mình thực hiện hoặc đã ghi nguồn đầy đủ.</span></label>
+      <div class="honeypot" aria-hidden="true"><label>Leave blank<input name="_honey" tabindex="-1" autocomplete="off"></label></div>
+      <button class="button primary" type="submit">Gửi bài viết</button>
+      <p class="field-help">Bài viết sẽ được gửi đến Ban Biên tập Y-VOICE để xem xét trước khi đăng tải.</p>
+      <p class="field-help">Thông tin trong form được chuyển qua FormSubmit để gửi email. Nội dung chưa gửi sẽ không được lưu khi rời trang.</p>
+      <div id="form-status" role="status" aria-live="polite" tabindex="-1"></div>
     </form>
-    <div class="notice"><strong>Nếu email không mở</strong><p>Sao chép nội dung hoặc tải file .txt, rồi soạn thư mới gửi tới <a href="mailto:${recipient}">${recipient}</a>. Kiểm tra địa chỉ người nhận và tệp đính kèm trước khi gửi. Nội dung form không được lưu sau khi tải lại hoặc rời trang.</p></div>`
+    <aside class="notice"><strong>Cần hỗ trợ?</strong><p><a href="mailto:insightyouthvoiceclub@gmail.com">insightyouthvoiceclub@gmail.com</a></p><a class="button secondary" href="mailto:insightyouthvoiceclub@gmail.com">Gửi email trực tiếp</a></aside>`
   },
   '/writing-guide': {
     title: 'Hướng dẫn viết bài',
@@ -44,43 +49,50 @@ const pages = {
 function wireForm() {
   const form = document.querySelector('#article-form');
   if (!form) return;
-  const status = document.querySelector('#form-status');
-  function article() {
-    if (!form.reportValidity()) return null;
-    try { return composeArticle(Object.fromEntries(new FormData(form))); }
-    catch (error) { status.textContent = error.message; return null; }
+  const status = form.querySelector('#form-status');
+  const button = form.querySelector('[type="submit"]');
+  const fields = [...form.querySelectorAll('input:not([name="_honey"]), select, textarea')];
+  for (const field of fields) {
+    const error = document.createElement('span');
+    error.id = 'error-' + field.name; error.className = 'field-error';
+    field.setAttribute('aria-describedby', error.id);
+    field.closest('label').after(error);
+    field.addEventListener('input', () => validate(field));
+    field.addEventListener('change', () => validate(field));
   }
-  form.addEventListener('submit', (event) => {
+  function validate(field) {
+    let message = '';
+    if (field.required && (field.type === 'checkbox' ? !field.checked : !field.value.trim())) message = field.type === 'checkbox' ? 'Vui lòng xác nhận nội dung trước khi gửi.' : 'Vui lòng điền trường này.';
+    else if (field.validity.typeMismatch) message = field.type === 'email' ? 'Vui lòng nhập email hợp lệ.' : 'Vui lòng nhập link hợp lệ.';
+    else if (field.name === 'document' && field.value && !/^https?:\/\//i.test(field.value)) message = 'Link tài liệu cần bắt đầu bằng https:// hoặc http://.';
+    else if (!field.validity.valid) message = 'Vui lòng kiểm tra lại nội dung trường này.';
+    document.getElementById('error-' + field.name).textContent = message;
+    field.setAttribute('aria-invalid', String(Boolean(message)));
+    return !message;
+  }
+  let sending = false;
+  form.addEventListener('submit', async event => {
     event.preventDefault();
-    const data = article();
-    if (!data) return;
-    // Long mailto URLs are not reliably supported by email clients.
-    if (data.mailto.length > 1800) {
-      status.textContent = 'Bài viết dài hơn mức mở email ổn định. Hãy dùng “Sao chép nội dung email” hoặc “Tải nội dung .txt”, rồi gửi đến ' + recipient + '.';
-      return;
-    }
-    status.textContent = 'Đã yêu cầu mở ứng dụng email. Bài chưa được gửi: hãy kiểm tra nội dung và bấm Gửi trong email. Nếu không mở được, dùng nút sao chép hoặc tải file.';
-    window.location.href = data.mailto;
-  });
-  document.querySelector('#copy-article').addEventListener('click', async () => {
-    const data = article();
-    if (!data) return;
+    if (sending) return;
+    const invalid = fields.filter(field => !validate(field));
+    if (invalid.length) { invalid[0].focus(); return; }
+    if (form.elements._honey.value) return;
+    sending = true; button.disabled = true; button.textContent = 'Đang gửi…';
+    status.textContent = 'Đang chuyển bài viết. Vui lòng chờ.';
     try {
-      await navigator.clipboard.writeText(`Người nhận: ${recipient}\r\nTiêu đề: ${data.subject}\r\n\r\n${data.body}`);
-      status.textContent = 'Đã sao chép. Hãy dán vào email và gửi tới ' + recipient + '. Bài chưa được gửi.';
+      const result = await submitArticle(Object.fromEntries(new FormData(form)));
+      if (result === 'activation') {
+        status.textContent = 'Hộp thư nhận bài cần được kích hoạt. Ban Biên tập vui lòng kiểm tra email xác nhận FormSubmit. Bài chưa được xác nhận gửi; bạn có thể gửi trực tiếp qua email bên dưới.';
+      } else {
+        status.textContent = 'Gửi bài thành công! Cảm ơn bạn đã gửi bài đến Y-VOICE. Ban Biên tập sẽ xem xét nội dung và liên hệ với bạn khi cần.';
+        form.reset();
+      }
     } catch {
-      status.textContent = 'Trình duyệt không cho phép sao chép. Hãy dùng “Tải nội dung .txt”.';
+      status.replaceChildren(document.createTextNode('Không thể gửi bài lúc này. Vui lòng thử lại hoặc gửi trực tiếp qua email: '));
+      const link = document.createElement('a'); link.href = 'mailto:' + recipient; link.textContent = recipient; status.append(link);
+    } finally {
+      sending = false; button.disabled = false; button.textContent = 'Gửi bài viết'; status.focus();
     }
-  });
-  document.querySelector('#download-article').addEventListener('click', () => {
-    const data = article();
-    if (!data) return;
-    const blob = new Blob(['\uFEFF', `Người nhận: ${recipient}\r\nTiêu đề: ${data.subject}\r\n\r\n${data.body}`], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url; link.download = 'yvoice-bai-viet.txt'; link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    status.textContent = 'Đã tạo file nội dung để tải xuống. Hãy đính kèm hoặc sao chép nội dung vào email. Bài chưa được gửi.';
   });
 }
 
