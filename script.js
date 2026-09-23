@@ -59,7 +59,12 @@ function toggleDropdown(open) {
   dropdownButton.setAttribute('aria-expanded', String(open));
   panel.hidden = !open;
 }
-dropdownButton.addEventListener('click', () => toggleDropdown(panel.hidden));
+dropdownButton.addEventListener('click', (event) => {
+  // Hover already opens the desktop menu before the pointer click arrives.
+  // Keep that click open; keyboard and mobile still toggle normally.
+  const desktopPointer = event.detail > 0 && matchMedia('(hover: hover) and (min-width: 941px)').matches;
+  toggleDropdown(desktopPointer || panel.hidden);
+});
 dropdown.addEventListener('mouseenter', () => {
   if (matchMedia('(hover: hover) and (min-width: 941px)').matches) toggleDropdown(true);
 });

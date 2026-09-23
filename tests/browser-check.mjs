@@ -39,6 +39,14 @@ await page.locator('.dropdown-toggle').focus(); await page.keyboard.press('Arrow
 assert.equal(await page.locator('#contributor-menu').isVisible(),true);
 await page.keyboard.press('Escape');
 assert.equal(await page.locator('#contributor-menu').isVisible(),false);
+for (const [slug, title] of [['contributor','Gửi bài viết'], ['writing-guide','Hướng dẫn viết bài'], ['citations','Cách trích nguồn']]) {
+  await page.mouse.move(0, 0);
+  await page.locator('.dropdown-toggle').click();
+  assert.equal(await page.locator('#contributor-menu').isVisible(), true);
+  await page.locator(`#contributor-menu a[href="#/${slug}"]`).click();
+  await page.waitForFunction(expected => document.querySelector('#app-page h1')?.textContent === expected, title);
+  assert.equal(await page.locator('#app-page').isVisible(), true);
+}
 await page.screenshot({path:'../formsubmit-desktop.png',fullPage:true});
 console.log('PASS browser: validation, HTTP failure, activation, success, reset, mobile/desktop menus, hash reload, overflow. Requests mocked; no email sent.');
 } finally {await browser.close();}
