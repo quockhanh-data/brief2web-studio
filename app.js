@@ -10,7 +10,7 @@ const pages = {
       <div class="form-row"><label>Họ và tên *<input name="name" autocomplete="name" required maxlength="120"></label><label>Email liên hệ *<input name="email" type="email" autocomplete="email" required maxlength="254"></label></div>
       <label>Số điện thoại<input name="phone" type="tel" autocomplete="tel" maxlength="30"></label>
       <label>Tiêu đề bài viết *<input name="title" required maxlength="200"></label>
-      <label>Chủ đề / Chuyên mục *<select name="category" required><option value="">Chọn chuyên mục</option><option>Tập san</option><option>Podcast</option><option>Sự kiện</option><option>Kỹ năng</option><option>Khác</option></select></label>
+      <label>Chủ đề / Chuyên mục *<select name="category" required><option value="">Chọn chuyên mục</option><option>Tập san</option><option>Podcast</option><option>Bài báo khoa học</option><option>Nghiên cứu</option><option>Chia sẻ</option><option>Khác</option></select></label>
       <label>Nội dung / Mô tả bài viết *<textarea name="content" rows="12" required maxlength="50000"></textarea></label>
       <label>Nguồn tham khảo<textarea name="references" rows="3" maxlength="5000"></textarea></label>
       <label>Link tài liệu Google Drive / Word / PDF<input name="document" type="url" placeholder="https://…" maxlength="2048"></label>
@@ -97,7 +97,8 @@ function wireForm() {
 }
 
 function route() {
-  const path = location.hash.slice(1);
+  const requested = location.hash.slice(1);
+  const path = requested === 'news' ? '/news' : requested === 'activities' ? '/activities' : requested;
   const active = path.startsWith('/');
   home.hidden = active; page.hidden = !active;
   document.body.classList.toggle('interior-page', active);
@@ -105,6 +106,14 @@ function route() {
     document.title = 'Y-VOICE | Tiếng nói lý luận trẻ';
     requestAnimationFrame(() => document.getElementById(path || 'home')?.scrollIntoView());
     return;
+  }
+  if (path === '/activities' || path === '/news' || path.startsWith('/news/')) {
+    const isNews = path.startsWith('/news');
+    document.title = (isNews ? 'Bảng tin' : 'Hoạt động') + ' | Y-VOICE';
+    page.innerHTML = `<div class="container"><a class="back-link" href="#home">← Về Y-VOICE</a></div>`;
+    page.append(document.querySelector(isNews ? '#news-template' : '#activities-template').content.cloneNode(true));
+    if (isNews) window.dispatchEvent(new CustomEvent('news-ready', { detail: path.split('/')[2] || 'all' }));
+    window.scrollTo({ top: 0, behavior: 'instant' }); page.focus({ preventScroll: true }); return;
   }
   const entry = pages[path] || { title: 'Không tìm thấy trang', content: '<p>Trang này không tồn tại. <a href="#home">Về trang chủ</a></p>' };
   document.title = entry.title + ' | Y-VOICE';

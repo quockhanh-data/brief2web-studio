@@ -1,9 +1,9 @@
 const header = document.querySelector("[data-header]");
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const nav = document.querySelector("[data-nav]");
-const filters = document.querySelectorAll("[data-filter]");
-const cards = document.querySelectorAll("[data-category]");
-const search = document.querySelector("[data-search]");
+let filters = [];
+let cards = [];
+let search;
 
 function syncHeader() {
   header?.classList.toggle("scrolled", window.scrollY > 24);
@@ -22,8 +22,10 @@ function filterCards() {
   cards.forEach((card) => {
     const matchesCategory = active === "all" || card.dataset.category === active;
     const matchesSearch = card.textContent.toLowerCase().includes(query);
-    card.classList.toggle("hidden", !matchesCategory || !matchesSearch);
+    card.hidden = !matchesCategory || !matchesSearch;
   });
+  const empty = document.querySelector("[data-news-empty]");
+  if (empty) empty.hidden = [...cards].some(card => !card.hidden);
 }
 
 syncHeader();
@@ -42,17 +44,23 @@ nav?.addEventListener("click", (event) => {
   }
 });
 
-filters.forEach((button) => {
-  button.addEventListener("click", () => {
-    filters.forEach((item) => item.classList.remove("active"));
-    button.classList.add("active");
-    filterCards();
+addEventListener('news-ready', event => {
+  filters = document.querySelectorAll('#app-page [data-filter]');
+  cards = document.querySelectorAll('#app-page [data-category]');
+  search = document.querySelector('#app-page [data-search]');
+  filters.forEach(button => {
+    button.classList.toggle('active', button.dataset.filter === event.detail);
+    button.setAttribute('aria-pressed', String(button.classList.contains('active')));
+    button.addEventListener('click', () => {
+      filters.forEach(item => { item.classList.remove('active'); item.setAttribute('aria-pressed', 'false'); });
+      button.classList.add('active'); button.setAttribute('aria-pressed', 'true'); filterCards();
+    });
   });
+  if (![...filters].some(button => button.classList.contains('active'))) filters[0].classList.add('active');
+  search.addEventListener('input', filterCards); filterCards();
 });
 
-search?.addEventListener("input", filterCards);
-
-const dropdown = document.querySelector('[data-dropdown]');
+document.querySelectorAll('[data-dropdown]').forEach(dropdown => {
 const dropdownButton = dropdown.querySelector('button');
 const panel = dropdown.querySelector('.dropdown-panel');
 function toggleDropdown(open) {
@@ -64,6 +72,7 @@ dropdownButton.addEventListener('click', (event) => {
   // Keep that click open; keyboard and mobile still toggle normally.
   const desktopPointer = event.detail > 0 && matchMedia('(hover: hover) and (min-width: 941px)').matches;
   toggleDropdown(desktopPointer || panel.hidden);
+  if (desktopPointer && dropdownButton.hasAttribute("data-news-toggle")) location.hash = "/news";
 });
 dropdown.addEventListener('mouseenter', () => {
   if (matchMedia('(hover: hover) and (min-width: 941px)').matches) toggleDropdown(true);
@@ -89,4 +98,6 @@ document.addEventListener('keydown', (event) => {
 });
 nav.addEventListener('click', (event) => {
   if (event.target.closest('a')) { toggleDropdown(false); closeMenu(); }
+});
+
 });

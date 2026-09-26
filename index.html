@@ -34,8 +34,15 @@
 
       <nav class="nav-links" id="navigation" aria-label="Menu chính" data-nav>
         <a href="#about">Giới thiệu</a>
-        <a href="#activities">Hoạt động</a>
-        <a href="#news">Bảng tin</a>
+        <a href="#/activities">Hoạt động</a>
+        <div class="nav-dropdown" data-dropdown>
+          <button type="button" class="dropdown-toggle" aria-expanded="false" aria-controls="news-menu" data-news-toggle>Bảng tin <span aria-hidden="true">▾</span></button>
+          <div class="dropdown-panel" id="news-menu" hidden>
+            <a href="#/news/tap-san">Tập san</a><a href="#/news/podcast">Podcast</a>
+            <a href="#/news/bai-bao-khoa-hoc">Bài báo khoa học</a>
+            <a href="#/news/nghien-cuu">Nghiên cứu</a><a href="#/news/chia-se">Chia sẻ</a>
+          </div>
+        </div>
         <div class="nav-dropdown" data-dropdown>
           <button type="button" class="dropdown-toggle" aria-expanded="false" aria-controls="contributor-menu">Cộng Tác Viên <span aria-hidden="true">▾</span></button>
           <div class="dropdown-panel" id="contributor-menu" hidden>
@@ -164,14 +171,74 @@
       <section class="section muted" id="leadership">
         <div class="container"><p class="section-kicker">Con người Y-VOICE</p><h2>Ban Chủ nhiệm</h2>
           <div class="leadership-grid">
-            <!-- TODO: Add verified chair and vice-chair names, portraits and biographies from the club. -->
-            <article class="info-card"><h3>Chủ nhiệm</h3><p>Thông tin đang được cập nhật.</p></article>
-            <article class="info-card"><h3>Phó Chủ nhiệm</h3><p>Thông tin đang được cập nhật.</p></article>
+            <article class="info-card leader-card">
+              <div class="leader-monogram" aria-hidden="true">ĐP</div>
+              <p class="leader-role">Chủ nhiệm</p><h3>Nguyễn Đức Phúc</h3>
+              <p class="leader-study">Truyền thông đa phương tiện · Khoa Truyền thông và Nghệ thuật Ứng dụng</p>
+              <p>Quan tâm đến truyền thông, sáng tạo nội dung và các hoạt động học thuật – xã hội. Yêu thích việc biến những ý tưởng thành nội dung có giá trị, học hỏi, kết nối và tạo ra những dự án có ý nghĩa cho cộng đồng sinh viên.</p>
+              <details><summary>Kinh nghiệm và hoạt động</summary><p>Tham gia và điều phối các dự án truyền thông: viết nội dung, lên ý tưởng, quay – chụp, dựng video và quản lý hoạt động nhóm. Tham gia xây dựng, vận hành, lập kế hoạch hoạt động và định hướng phát triển CLB Insight YouthVoice với vai trò Chủ nhiệm.</p><p>Triển khai sản phẩm truyền thông, nội dung và sự kiện; làm việc nhóm, điều phối và thực hiện công việc theo kế hoạch.</p></details>
+              <blockquote>“Mỗi người đều có một tiếng nói riêng. Hãy học hỏi, dám chia sẻ và cùng nhau biến những suy nghĩ của mình thành những giá trị tích cực cho cộng đồng.”</blockquote>
+            </article>
+            <article class="info-card leader-card">
+              <img class="leader-portrait" src="assets/nguyen-thi-thuy-trang.png" alt="Nguyễn Thị Thùy Trang, Phó Chủ nhiệm Y-VOICE" loading="lazy" width="1436" height="2560" />
+              <p class="leader-role">Phó Chủ nhiệm</p><h3>Nguyễn Thị Thùy Trang</h3>
+              <p class="leader-study">Truyền thông Đa phương tiện · Khóa 04<br>Khoa Truyền thông và Nghệ thuật Ứng dụng<br>Đại học Quản lý và Công nghệ TP Hồ Chí Minh</p>
+              <p>Sáng lập Nui Tuong Science Day — dự án giáo dục khoa học dành cho học sinh địa phương.</p>
+              <details><summary>Kinh nghiệm và thành tựu</summary><ul>
+                <li>Country Director, Youth For Education — phụ trách truyền thông, đối tác và các chương trình giao lưu (nhiệm kỳ 2024–2025).</li>
+                <li>Đại biểu CrossCulture Programme (CCP), Đức — được CCP Fellow đề cử.</li>
+                <li>Giải Nhì Cuộc thi Tranh biện Me For Us.</li><li>Top 14 Cuộc thi Z-Pitch 2024.</li>
+                <li>Học bổng 60% Chương trình Giao lưu Thanh niên Châu Á – Thái Bình Dương 2023 tại Campuchia.</li>
+                <li>Học bổng 60% International Youth Cultural Connect Camp 2024 tại Indonesia.</li>
+              </ul></details>
+              <blockquote>“Cùng học hỏi, cùng chia sẻ và cùng phát triển, mỗi kiến thức được lan tỏa đều có thể tạo nên một giá trị mới”</blockquote>
+            </article>
           </div>
         </div>
       </section>
       </section>
-      <section class="section dark" id="activities">
+
+      <section class="section values">
+        <div class="container values-grid">
+          <div class="section-copy">
+            <p class="section-kicker">Giá trị cốt lõi</p>
+            <h2>Ba trụ cột giữ cho tiếng nói có trọng lượng.</h2>
+          </div>
+          <div class="value-stack">
+            <article>
+              <strong>Tri thức</strong>
+              <span>Nền tảng của mọi quan điểm.</span>
+            </article>
+            <article>
+              <strong>Lan tỏa</strong>
+              <span>Biến tri thức thành giá trị chung.</span>
+            </article>
+            <article>
+              <strong>Trách nhiệm</strong>
+              <span>Nói đúng, nói có căn cứ, nói có nhận thức.</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="section join-section" id="contact">
+        <div class="container join-panel">
+          <div>
+            <p class="section-kicker">Đây là điểm bắt đầu</p>
+            <h2>Nếu bạn tin rằng suy nghĩ cần được rèn luyện trước khi được nói ra.</h2>
+            <p>Y-VOICE đang chờ bạn.</p>
+          </div>
+          <div class="contact-list">
+            <a href="mailto:insightyouthvoiceclub@gmail.com">insightyouthvoiceclub@gmail.com</a>
+            <a href="tel:0901722998">0901722998 - Đức Phúc</a>
+            <a href="https://www.facebook.com/profile.php?id=61574512915575" target="_blank" rel="noopener noreferrer">Insight YouthVoice</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+<template id="activities-template">      <section class="section dark" id="activities">
         <div class="container">
           <div class="section-heading">
             <p class="section-kicker">Chúng mình được tạo nên để làm gì?</p>
@@ -202,36 +269,13 @@
           </div>
         </div>
       </section>
-
-      <section class="section values">
-        <div class="container values-grid">
-          <div class="section-copy">
-            <p class="section-kicker">Giá trị cốt lõi</p>
-            <h2>Ba trụ cột giữ cho tiếng nói có trọng lượng.</h2>
-          </div>
-          <div class="value-stack">
-            <article>
-              <strong>Tri thức</strong>
-              <span>Nền tảng của mọi quan điểm.</span>
-            </article>
-            <article>
-              <strong>Lan tỏa</strong>
-              <span>Biến tri thức thành giá trị chung.</span>
-            </article>
-            <article>
-              <strong>Trách nhiệm</strong>
-              <span>Nói đúng, nói có căn cứ, nói có nhận thức.</span>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section news-section" id="news">
+<section class="section"><div class="container"><p class="section-kicker">Khoảnh khắc Y-VOICE</p><h2>Hình ảnh hoạt động</h2><p class="page-intro">Theo dõi những hoạt động của CLB theo tháng và năm.</p><div class="archive-controls"><label>Năm<select aria-label="Năm hoạt động" disabled><option>Chưa có tư liệu</option></select></label><label>Tháng<select aria-label="Tháng hoạt động" disabled><option>Chưa có tư liệu</option></select></label></div><div class="notice">Hình ảnh và tư liệu hoạt động đang được chuẩn bị. Các album sẽ được sắp xếp theo tháng, năm khi có nội dung.</div></div></section></template>
+<template id="news-template">      <section class="section news-section" id="news">
         <div class="container">
           <div class="news-top">
             <div>
               <p class="section-kicker">Bảng tin Y-VOICE</p>
-              <h2>Tập san, podcast, tọa đàm và góc nhìn sinh viên.</h2>
+              <h2>Tri thức, góc nhìn và tiếng nói sinh viên.</h2>
             </div>
             <label class="search-box">
               <span>Tìm</span>
@@ -243,10 +287,12 @@
             <button class="filter active" type="button" data-filter="all">Tất cả</button>
             <button class="filter" type="button" data-filter="tap-san">Tập san</button>
             <button class="filter" type="button" data-filter="podcast">Podcast</button>
-            <button class="filter" type="button" data-filter="su-kien">Sự kiện</button>
-            <button class="filter" type="button" data-filter="ky-nang">Kỹ năng</button>
+            <button class="filter" type="button" data-filter="bai-bao-khoa-hoc">Bài báo khoa học</button><button class="filter" type="button" data-filter="nghien-cuu">Nghiên cứu</button>
+            <button class="filter" type="button" data-filter="chia-se">Chia sẻ</button>
           </div>
 
+          <p class="draft-note">Các nội dung dưới đây là giới thiệu mẫu; bài viết chính thức đang được cập nhật.</p>
+          <p class="notice" data-news-empty hidden>Chưa có nội dung phù hợp. Y-VOICE sẽ cập nhật bài viết tại chuyên mục này.</p>
           <div class="news-layout" data-news-list>
             <article class="post-card featured" data-category="tap-san">
               <img src="assets/thumb-tap-san.jpg" alt="Tập san lý luận trẻ" />
@@ -270,19 +316,10 @@
               </div>
             </article>
 
-            <article class="post-card" data-category="su-kien">
-              <img src="assets/thumb-toa-dam.jpg" alt="Tọa đàm chính sách công" />
-              <div>
-                <span>Sự kiện</span>
-                <h3>Tọa đàm sinh viên với các vấn đề xã hội đương đại</h3>
-                <p>Không gian thảo luận trung lập, có định hướng, mở rộng kết nối chuyên gia.</p>
-              </div>
-            </article>
-
-            <article class="post-card" data-category="ky-nang">
+            <article class="post-card" data-category="chia-se">
               <img src="assets/thumb-hung-bien.jpg" alt="Hùng biện có căn cứ" />
               <div>
-                <span>Kỹ năng</span>
+                <span>Chia sẻ</span>
                 <h3>Hùng biện có căn cứ: nói tự tin, bảo vệ quan điểm</h3>
                 <p>Rèn kỹ năng trình bày, phản biện và chịu trách nhiệm với điều mình nói.</p>
               </div>
@@ -290,23 +327,7 @@
           </div>
         </div>
       </section>
-
-      <section class="section join-section" id="contact">
-        <div class="container join-panel">
-          <div>
-            <p class="section-kicker">Đây là điểm bắt đầu</p>
-            <h2>Nếu bạn tin rằng suy nghĩ cần được rèn luyện trước khi được nói ra.</h2>
-            <p>Y-VOICE đang chờ bạn.</p>
-          </div>
-          <div class="contact-list">
-            <a href="mailto:insightyouthvoiceclub@gmail.com">insightyouthvoiceclub@gmail.com</a>
-            <a href="tel:0901722998">0901722998 - Đức Phúc</a>
-            <a href="https://www.facebook.com/profile.php?id=61574512915575" target="_blank" rel="noopener noreferrer">Insight YouthVoice</a>
-          </div>
-        </div>
-      </section>
-    </main>
-
+</template>
     <main id="app-page" class="app-page" hidden tabindex="-1"></main>
     <footer class="site-footer">
       <div class="container footer-grid">
@@ -314,7 +335,7 @@
           <img src="assets/yvoice-logo.png" alt="Insight YouthVoice" />
           <p>Y-VOICE | Tiếng nói lý luận trẻ</p>
         </div>
-        <div class="footer-social"><a href="https://www.facebook.com/profile.php?id=61574512915575" target="_blank" rel="noopener noreferrer">Facebook Y-VOICE ↗</a><a href="mailto:insightyouthvoiceclub@gmail.com">Gửi email cho CLB</a></div>
+        <div class="footer-social"><a href="mailto:insightyouthvoiceclub@gmail.com">Gửi email cho CLB</a></div>
       </div>
     </footer>
 
