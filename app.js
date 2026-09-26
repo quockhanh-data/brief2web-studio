@@ -26,12 +26,14 @@ const pages = {
   },
   '/writing-guide': {
     title: 'Hướng dẫn viết bài',
-    content: `<p class="page-intro">Gợi ý chuẩn bị bản thảo gửi Y-VOICE.</p><div class="notice">Các gợi ý dưới đây chỉ để tham khảo. Hướng dẫn chính thức của CLB đang được cập nhật.</div>
+    content: `<p class="page-intro">Một bài viết có giá trị bắt đầu từ điều bạn quan tâm, được nuôi dưỡng bằng câu hỏi và thuyết phục bằng lập luận. Cùng Y-VOICE biến góc nhìn của bạn thành một nội dung đáng chia sẻ.</p><div class="notice">Bạn không cần có sẵn một bài viết hoàn hảo để bắt đầu. Những gợi ý dưới đây sẽ giúp bạn phát triển ý tưởng và chuẩn bị bản thảo gửi đến Y-VOICE.</div>
       <!-- TODO: Replace suggestions with guidelines approved by Y-VOICE. -->
-      <div class="guide-content"><h2>Yêu cầu chung</h2><p>Chọn vấn đề cụ thể, nêu rõ góc nhìn và kiểm tra độ tin cậy của thông tin. Phân biệt dữ kiện với ý kiến cá nhân.</p>
-      <h2>Cấu trúc bài viết</h2><p>Có thể bắt đầu bằng câu hỏi chính, triển khai luận điểm cùng dẫn chứng, rồi kết lại bằng nhận định của tác giả.</p>
-      <h2>Cách trình bày</h2><p>Chia đoạn dễ đọc, dùng tiêu đề ngắn và ghi nguồn cho nội dung trích dẫn. Nếu có hình ảnh, ghi tác giả hoặc nguồn ảnh.</p>
-      <h2>Checklist trước khi gửi</h2><ul><li>Tiêu đề phản ánh đúng nội dung.</li><li>Kiểm tra chính tả, số liệu và trích dẫn.</li><li>Điền tên tác giả và email liên hệ.</li><li>Kiểm tra quyền xem đối với link tài liệu chia sẻ.</li></ul>
+      <div class="guide-content"><h2>Bắt đầu từ một câu hỏi đáng tìm hiểu</h2><p>Chọn một vấn đề bạn thực sự quan tâm trong học tập, đời sống hoặc xã hội. Thu hẹp chủ đề thành một câu hỏi cụ thể: bạn muốn làm rõ điều gì, và vì sao điều đó có ý nghĩa với người đọc?</p>
+      <h2>Xây dựng góc nhìn bằng lập luận và dẫn chứng</h2><p>Nêu rõ quan điểm của bạn, giải thích lý do và bổ sung dẫn chứng từ những nguồn đáng tin cậy. Phân biệt thông tin đã được kiểm chứng với nhận định cá nhân; cân nhắc những góc nhìn khác để bài viết có chiều sâu và công bằng hơn.</p>
+      <h2>Dẫn dắt người đọc qua từng ý</h2><p>Mở bài bằng một câu hỏi, tình huống hoặc chi tiết gợi suy nghĩ. Trong phần thân bài, mỗi đoạn nên phát triển một ý chính, kết nối lập luận với dẫn chứng. Kết bài bằng điều bạn rút ra hoặc một câu hỏi mở để tiếp tục cuộc trao đổi.</p>
+      <h2>Viết rõ ràng, chia sẻ có trách nhiệm</h2><p>Ưu tiên cách diễn đạt dễ hiểu, chia đoạn vừa phải và đặt tiêu đề phản ánh đúng nội dung. Giải thích thuật ngữ khi cần, tôn trọng sự khác biệt và tránh quy chụp. Ghi nguồn cho số liệu, ý tưởng, nội dung trích dẫn và hình ảnh bạn sử dụng.</p>
+      <h2>Trước khi gửi, dành một lượt đọc lại</h2><ul><li>Bài viết có một câu hỏi hoặc thông điệp chính rõ ràng.</li><li>Các luận điểm có lý do và dẫn chứng phù hợp.</li><li>Chính tả, số liệu, tên riêng và nguồn tham khảo đã được kiểm tra.</li><li>Hình ảnh có thông tin nguồn và quyền sử dụng phù hợp.</li><li>Tên tác giả và email liên hệ đã được điền đầy đủ.</li><li>Link tài liệu đã mở quyền xem cho Ban Biên tập.</li></ul>
+      <p>Mỗi góc nhìn được chuẩn bị bằng sự tìm hiểu nghiêm túc đều có thể mở ra một cuộc đối thoại có ý nghĩa. Khi bản thảo đã sẵn sàng, hãy gửi đến Y-VOICE để Ban Biên tập xem xét trước khi đăng tải.</p>
       <a class="button primary" href="#/contributor">Gửi bài viết</a></div>`
   },
   '/citations': {
