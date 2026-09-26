@@ -960,3 +960,24 @@ p {
 .archive-controls select { padding: 12px; font: inherit; border: 1px solid var(--line); border-radius: 6px; }
 .news-layout { margin-top: 24px; }
 @media (max-width: 640px) { .leader-card { padding: 22px; } .leader-portrait { height: 360px; } }
+
+/* Magazine-style demonstration board. */
+.news-top h2 { font-size: clamp(2rem, 4vw, 3.6rem); max-width: 780px; }
+.news-layout { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+.news-layout .post-card, .news-layout .post-card:not(.featured) { display: block; border-radius: 14px; box-shadow: 0 8px 28px rgba(20,24,38,.04); }
+.news-layout .post-card.featured { grid-column: span 2; grid-row: auto; }
+.news-layout .post-card img, .news-layout .post-card:not(.featured) img { height: auto; min-height: 0; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #e4edf0; }
+.news-layout .post-card.featured img { aspect-ratio: 2 / 1; }
+.news-layout .post-card[data-category="nghien-cuu"] img { object-position: 75% center; }
+.news-layout .post-card[data-category="bai-bao-khoa-hoc"] img { object-position: 25% center; }
+.news-layout .post-card div { padding: 24px; }
+.news-layout .post-card h3 { font-size: 1.35rem; line-height: 1.35; }
+.news-layout .post-card.featured h3 { font-size: clamp(1.6rem, 3vw, 2.4rem); }
+.news-layout .post-meta { margin: 0 0 14px; color: var(--muted); font-size: .78rem; }
+.post-preview { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 16px; }
+.post-preview summary { color: var(--red); font-weight: 700; cursor: pointer; list-style: none; }
+.post-preview summary span { float: right; color: inherit; margin: 0; }
+.post-preview p { margin-top: 14px; }
+.post-preview a { font-size: .9rem; }
+@media (max-width: 940px) { .news-layout { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 640px) { .news-layout { grid-template-columns: 1fr; gap: 20px; } .news-layout .post-card.featured { grid-column: auto; } .news-layout .post-card div { padding: 22px; } }
