@@ -22,3 +22,4 @@
 - `functions/api/[[path]].js`: public article feed and protected admin API.
 - `migrations/0001_articles.sql`: articles and login rate-limit tables.
 - `migrations/0002_admin_sessions.sql`: hashed, expiring admin sessions.
+- Uploaded cover images use the existing D1 database (1.75 MB per image, 350 MB total cap); no R2 subscription.
