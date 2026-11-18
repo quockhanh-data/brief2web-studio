@@ -133,8 +133,8 @@ export async function onRequest({ request, env }) {
     if (path === "/api/admin/articles" && method === "GET") {
       const status = url.searchParams.get("status") || "all";
       const query = status === "all"
-        ? "SELECT id,title,category,excerpt,body,cover_image,author_name,author_email,author_phone,references_text,document_url,status,created_at,updated_at,published_at FROM articles ORDER BY created_at DESC LIMIT 200"
-        : "SELECT id,title,category,excerpt,body,cover_image,author_name,author_email,author_phone,references_text,document_url,status,created_at,updated_at,published_at FROM articles WHERE status = ? ORDER BY created_at DESC LIMIT 200";
+        ? "SELECT id,title,category,excerpt,body,cover_image,references_text,document_url,status,created_at,updated_at,published_at FROM articles ORDER BY created_at DESC LIMIT 200"
+        : "SELECT id,title,category,excerpt,body,cover_image,references_text,document_url,status,created_at,updated_at,published_at FROM articles WHERE status = ? ORDER BY created_at DESC LIMIT 200";
       const result = status === "all" ? await env.DB.prepare(query).all() : await env.DB.prepare(query).bind(status).all();
       return json({ articles: result.results || [] });
     }
@@ -156,11 +156,11 @@ export async function onRequest({ request, env }) {
       const value = await readBody(request);
       if (value.title !== undefined) {
         const article = validateArticle(value);
-        const status = ["pending", "draft", "published", "archived"].includes(value.status) ? value.status : "draft";
+        const status = ["draft", "published", "archived"].includes(value.status) ? value.status : "draft";
         const now = new Date().toISOString();
         await env.DB.prepare("UPDATE articles SET title=?,category=?,excerpt=?,body=?,cover_image=?,status=?,updated_at=?,published_at=CASE WHEN ?='published' THEN COALESCE(published_at, ?) WHEN ?!='published' THEN NULL ELSE published_at END WHERE id=?")
           .bind(article.title, article.category, article.excerpt, article.body, article.image, status, now, status, now, status, id).run();
-      } else if (value.status && ["pending", "draft", "published", "archived"].includes(value.status)) {
+      } else if (value.status && ["draft", "published", "archived"].includes(value.status)) {
         const now = new Date().toISOString();
         await env.DB.prepare("UPDATE articles SET status=?, updated_at=?, published_at=CASE WHEN ?='published' THEN COALESCE(published_at, ?) WHEN ?!='published' THEN NULL ELSE published_at END WHERE id=?")
           .bind(value.status, now, value.status, now, value.status, id).run();

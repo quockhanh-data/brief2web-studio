@@ -85,12 +85,10 @@ function makeArticleCard(article) {
   const title = document.createElement('h3'); title.textContent = article.title;
   const detail = document.createElement('p'); detail.textContent = `${article.category} · ${article.status} · ${new Date(article.created_at).toLocaleDateString('vi-VN')}`;
   card.append(title, detail);
-  if (article.author_name) { const author = document.createElement('p'); author.textContent = `Tác giả gửi: ${article.author_name} (${article.author_email})`; card.append(author); }
   const actions = document.createElement('div'); actions.className = 'article-actions';
   const edit = document.createElement('button'); edit.textContent = 'Sửa'; edit.addEventListener('click', () => editArticle(article)); actions.append(edit);
   if (article.status !== 'published') { const publish = document.createElement('button'); publish.textContent = 'Duyệt và đăng'; publish.className = 'publish'; publish.addEventListener('click', () => updateStatus(article.id, 'published')); actions.append(publish); }
   if (article.status === 'published') { const unpublish = document.createElement('button'); unpublish.textContent = 'Gỡ khỏi bảng tin'; unpublish.addEventListener('click', () => updateStatus(article.id, 'draft')); actions.append(unpublish); }
-  if (article.status === 'pending') { const draft = document.createElement('button'); draft.textContent = 'Chuyển thành nháp'; draft.addEventListener('click', () => updateStatus(article.id, 'draft')); actions.append(draft); }
   if (article.status !== 'archived') { const archive = document.createElement('button'); archive.textContent = 'Ẩn bài'; archive.addEventListener('click', () => updateStatus(article.id, 'archived')); actions.append(archive); }
   if (article.status === 'archived') { const restore = document.createElement('button'); restore.textContent = 'Khôi phục nháp'; restore.addEventListener('click', () => updateStatus(article.id, 'draft')); actions.append(restore); }
   card.append(actions); return card;

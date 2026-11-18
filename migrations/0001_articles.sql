@@ -5,12 +5,9 @@ CREATE TABLE IF NOT EXISTS articles (
   excerpt TEXT NOT NULL DEFAULT '',
   body TEXT NOT NULL,
   cover_image TEXT NOT NULL DEFAULT '',
-  author_name TEXT NOT NULL DEFAULT '',
-  author_email TEXT NOT NULL DEFAULT '',
-  author_phone TEXT NOT NULL DEFAULT '',
   references_text TEXT NOT NULL DEFAULT '',
   document_url TEXT NOT NULL DEFAULT '',
-  status TEXT NOT NULL CHECK (status IN ('pending','draft','published','archived')),
+  status TEXT NOT NULL CHECK (status IN ('draft','published','archived')),
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,
   published_at TEXT
