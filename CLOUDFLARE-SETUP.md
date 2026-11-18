@@ -14,6 +14,7 @@
 1. Create a D1 database named `y-voice-content`.
 2. Add a Pages Function D1 binding named `DB` and select the database.
 3. Apply `migrations/0001_articles.sql` once.
+4. Apply `migrations/0002_admin_sessions.sql` once.
 
 ## Admin secrets
 
