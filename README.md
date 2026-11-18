@@ -27,3 +27,5 @@ Cloudflare Pages Functions require a D1 binding named `DB`. See [CLOUDFLARE-SETU
 - Intended address: `https://y-voice.pages.dev`
 
 The Pages address becomes active after the project deploys successfully and its database and secrets are configured.
+
+Cover images uploaded in the editor are stored in the existing D1 database: 1.75 MB maximum per image and 350 MB total. No R2 subscription is used.
