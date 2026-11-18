@@ -6,6 +6,32 @@ const articleList = document.querySelector('#article-list');
 const listMessage = document.querySelector('#list-message');
 const editorMessage = document.querySelector('#editor-message');
 let currentStatus = 'all';
+const imageFile = document.querySelector('#image-file');
+const imagePreview = document.querySelector('#image-preview');
+const uploadMessage = document.querySelector('#upload-message');
+document.querySelector('#upload-image').addEventListener('click', async () => {
+  const file = imageFile.files?.[0];
+  if (!file) { message(uploadMessage, 'Chọn ảnh trước khi tải lên.', 'error'); return; }
+  const button = document.querySelector('#upload-image');
+  button.disabled = true;
+  message(uploadMessage, 'Đang tải ảnh…');
+  try {
+    const form = new FormData(); form.append('image', file);
+    const response = await fetch('/api/admin/upload', { method: 'POST', credentials: 'same-origin', body: form });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || 'Không tải được ảnh.');
+    articleForm.elements.image.value = result.url;
+    imagePreview.src = result.url; imagePreview.hidden = false;
+    message(uploadMessage, 'Đã tải ảnh lên kho D1.', 'success');
+  } catch (error) { message(uploadMessage, error.message, 'error'); }
+  finally { button.disabled = false; }
+});
+articleForm.elements.image.addEventListener('input', () => {
+  const value = articleForm.elements.image.value.trim();
+  imagePreview.hidden = !value;
+  if (value) imagePreview.src = value;
+});
+
 
 function message(node, text, kind = '') { node.textContent = text; node.className = `admin-message ${kind}`.trim(); }
 async function api(path, options = {}) {
@@ -43,6 +69,7 @@ function clearEditor() {
   articleForm.reset(); articleForm.elements.id.value = '';
   document.querySelector('#editor-title').textContent = 'Viết bài mới';
   document.querySelector('#cancel-edit').hidden = true;
+  imageFile.value = ''; imagePreview.hidden = true; imagePreview.removeAttribute('src');
 }
 document.querySelector('#cancel-edit').addEventListener('click', clearEditor);
 
