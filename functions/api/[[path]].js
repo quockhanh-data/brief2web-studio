@@ -66,7 +66,7 @@ function validateArticle(value) {
   if (!CATEGORIES.has(category)) throw new ApiInputError("Vui lòng chọn chuyên mục hợp lệ.");
   if (!body || body.length > 50000) throw new ApiInputError("Nội dung cần có và tối đa 50.000 ký tự.");
   if (excerpt.length > 500) throw new ApiInputError("Mô tả ngắn tối đa 500 ký tự.");
-  if (image && (!/^https:\/\//i.test(image) || image.length > 2048)) throw new ApiInputError("Ảnh bìa cần là đường dẫn HTTPS hợp lệ.");
+  if (image && (!(/^https:\/\//i.test(image) || /^\/api\/media\/[0-9a-f-]{36}$/i.test(image)) || image.length > 2048)) throw new ApiInputError("Ảnh bìa cần là đường dẫn HTTPS hoặc ảnh tải lên hợp lệ.");
   return { title, category, body, excerpt, image };
 }
 
@@ -82,6 +82,18 @@ export async function onRequest({ request, env }) {
   if (["POST", "PUT", "PATCH", "DELETE"].includes(method) && !sameOrigin(request)) return json({ error: "Nguồn gửi không hợp lệ." }, 403);
 
   try {
+    if (path.startsWith("/api/media/") && method === "GET") {
+      const mediaId = path.slice("/api/media/".length);
+      if (!/^[0-9a-f-]{36}$/i.test(mediaId)) return json({ error: "Không tìm thấy ảnh." }, 404);
+      const image = await env.DB.prepare("SELECT content_type,image_data FROM article_images WHERE id=?").bind(mediaId).first();
+      if (!image) return json({ error: "Không tìm thấy ảnh." }, 404);
+      return new Response(image.image_data, { headers: {
+        "content-type": image.content_type,
+        "cache-control": "public, max-age=31536000, immutable",
+        "x-content-type-options": "nosniff",
+      }});
+    }
+
     if (path === "/api/posts" && method === "GET") {
       const { results } = await env.DB.prepare("SELECT id, title, category, excerpt, body, cover_image, published_at FROM articles WHERE status = 'published' ORDER BY published_at DESC LIMIT 100").all();
       return json({ posts: results || [] }, 200, { "cache-control": "public, max-age=60, s-maxage=60" });
@@ -126,6 +138,27 @@ export async function onRequest({ request, env }) {
 
     if (!path.startsWith("/api/admin/")) return json({ error: "Không tìm thấy API." }, 404);
     if (!await requireAdmin(request, env)) return json({ error: "Vui lòng đăng nhập lại." }, 401);
+
+    if (path === "/api/admin/upload" && method === "POST") {
+      const form = await request.formData();
+      const file = form.get("image");
+      if (!(file instanceof File) || !file.size) throw new ApiInputError("Hãy chọn ảnh trước.");
+      if (file.size > 1750000) throw new ApiInputError("Ảnh tối đa 1,75 MB.");
+      const allowed = new Set(["image/jpeg","image/png","image/webp"]);
+      if (!allowed.has(file.type)) throw new ApiInputError("Chỉ nhận JPG, PNG hoặc WebP.");
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const jpeg = bytes[0]===255 && bytes[1]===216 && bytes[2]===255;
+      const png = bytes[0]===137 && bytes[1]===80 && bytes[2]===78 && bytes[3]===71;
+      const webp = bytes[0]===82 && bytes[1]===73 && bytes[2]===70 && bytes[3]===70 && bytes[8]===87 && bytes[9]===69 && bytes[10]===66 && bytes[11]===80;
+      if (!(file.type==="image/jpeg"&&jpeg) && !(file.type==="image/png"&&png) && !(file.type==="image/webp"&&webp)) throw new ApiInputError("Nội dung tệp không khớp định dạng ảnh.");
+      const size=bytes.byteLength;
+      const reserve=await env.DB.prepare("UPDATE image_storage_usage SET bytes_used=bytes_used+? WHERE id=1 AND bytes_used+?<=350000000").bind(size,size).run();
+      if (!reserve.meta || reserve.meta.changes!==1) throw new ApiInputError("Kho ảnh đã chạm giới hạn miễn phí 350 MB.");
+      const id=crypto.randomUUID();
+      try { await env.DB.prepare("INSERT INTO article_images (id,content_type,image_data,size_bytes,created_at) VALUES (?,?,?,?,?)").bind(id,file.type,bytes,size,new Date().toISOString()).run(); }
+      catch(e) { await env.DB.prepare("UPDATE image_storage_usage SET bytes_used=MAX(0,bytes_used-?) WHERE id=1").bind(size).run(); throw e; }
+      return json({ok:true,url:`/api/media/${id}`},201);
+    }
 
     if (path === "/api/admin/session" && method === "GET") return json({ ok: true });
 
