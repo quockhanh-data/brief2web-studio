@@ -45,6 +45,8 @@ nav?.addEventListener("click", (event) => {
 });
 
 addEventListener('news-ready', event => {
+  // The first eight cards are the former hard-coded copies, now managed as D1 drafts.
+  [...document.querySelectorAll('#app-page [data-news-list] .post-card')].slice(0, 8).forEach(card => card.remove());
   filters = document.querySelectorAll('#app-page [data-filter]');
   cards = document.querySelectorAll('#app-page [data-category]');
   search = document.querySelector('#app-page [data-search]');
