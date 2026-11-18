@@ -7,7 +7,7 @@ Website Y-VOICE with a public news board, an email submission form for contribut
 - Contributors send their name, contact email, draft, category, references, and document link to the editorial mailbox through FormSubmit. They do not need an account.
 - The editor reads the email, signs in at `/admin.html`, creates or edits a draft, and chooses when to publish.
 - Only articles explicitly published by an editor appear on the public board.
-- Admin access uses encrypted Cloudflare secrets and a signed secure session cookie.
+- Admin access uses one encrypted Cloudflare secret (`ADMIN_PASSWORD`). Random session tokens are stored as hashes in D1.
 
 ## Run the interface
 
