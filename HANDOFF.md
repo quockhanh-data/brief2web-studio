@@ -11,9 +11,9 @@
 
 - Production branch: `yvoice-insight-hub`.
 - Cloudflare Pages build command: `npm run build`; output directory: `dist`.
-- Cloudflare D1 binding: `DB`; schema: `migrations/0001_articles.sql`.
-- Encrypted admin secrets and FormSubmit first-time activation are described in `CLOUDFLARE-SETUP.md` and `EMAIL-SETUP.md`.
-- Never place admin secrets in GitHub or send them in chat.
+- Cloudflare D1 binding: `DB`; schema: `migrations/0001_articles.sql` and `migrations/0002_admin_sessions.sql`.
+- The single encrypted admin password secret and FormSubmit activation are described in `CLOUDFLARE-SETUP.md`.
+- Never place the admin password in GitHub or send it in chat.
 
 ## Main files
 
@@ -21,3 +21,4 @@
 - `admin.html`, `admin.css`, `admin.js`: editorial dashboard.
 - `functions/api/[[path]].js`: public article feed and protected admin API.
 - `migrations/0001_articles.sql`: articles and login rate-limit tables.
+- `migrations/0002_admin_sessions.sql`: hashed, expiring admin sessions.
