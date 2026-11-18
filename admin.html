@@ -25,7 +25,10 @@
             <label>Chuyên mục<select name="category" required><option value="">Chọn chuyên mục</option><option>Tập san</option><option>Podcast</option><option>Bài báo khoa học</option><option>Nghiên cứu</option><option>Chia sẻ</option><option>Khác</option></select></label>
             <label>Mô tả ngắn<textarea name="excerpt" rows="3" maxlength="500"></textarea></label>
             <label>Nội dung<textarea name="content" rows="14" required maxlength="50000"></textarea></label>
-            <label>Link ảnh bìa (HTTPS)<input name="image" type="url" placeholder="https://..."></label>
+            <label>Ảnh bìa (JPG, PNG hoặc WebP, tối đa 1,75 MB)<input id="image-file" type="file" accept="image/jpeg,image/png,image/webp"></label>
+            <div class="image-upload-row"><button id="upload-image" class="button secondary" type="button">Tải ảnh lên</button><span id="upload-message" class="admin-message" role="status"></span></div>
+            <label>Hoặc link ảnh ngoài (HTTPS)<input name="image" type="url" placeholder="https://..."></label>
+            <img id="image-preview" class="image-preview" alt="Xem trước ảnh bìa" hidden>
             <div class="admin-actions"><button class="button secondary" type="submit" name="intent" value="draft">Lưu nháp</button><button class="button primary" type="submit" name="intent" value="published">Đăng bài</button><button id="cancel-edit" type="button" class="button secondary" hidden>Hủy sửa</button></div>
             <p id="editor-message" class="admin-message" role="status"></p>
           </form>
