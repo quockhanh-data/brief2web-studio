@@ -23,31 +23,23 @@ function base64UrlToBytes(value) {
   return Uint8Array.from(atob(padded), c => c.charCodeAt(0));
 }
 
-async function signature(payload, secret) {
-  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  return new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload)));
+async function digest(value) {
+  return new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)));
 }
 
-async function issueSession(secret) {
-  const expires = Math.floor(Date.now() / 1000) + 60 * 60 * 12;
-  const nonce = crypto.randomUUID();
-  const payload = `${expires}.${nonce}`;
-  return `${bytesToBase64Url(new TextEncoder().encode(payload))}.${bytesToBase64Url(await signature(payload, secret))}`;
+function createSessionToken() {
+  return bytesToBase64Url(crypto.getRandomValues(new Uint8Array(32)));
 }
 
-async function hasSession(request, secret) {
-  const [encoded, provided, extra] = cookieValue(request, COOKIE).split(".");
-  if (!encoded || !provided || extra) return false;
-  try {
-    const payload = new TextDecoder().decode(base64UrlToBytes(encoded));
-    if (Number(payload.split(".")[0]) <= Math.floor(Date.now() / 1000)) return false;
-    return crypto.subtle.verify(
-      "HMAC",
-      await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["verify"]),
-      base64UrlToBytes(provided),
-      new TextEncoder().encode(payload),
-    );
-  } catch { return false; }
+async function tokenHash(token) {
+  return bytesToBase64Url(await digest(token));
+}
+
+async function hasSession(request, env) {
+  const token = cookieValue(request, COOKIE);
+  if (!token || token.length > 128) return false;
+  const session = await env.DB.prepare("SELECT expires_at FROM admin_sessions WHERE token_hash=?").bind(await tokenHash(token)).first();
+  return Boolean(session && Number(session.expires_at) > Math.floor(Date.now() / 1000));
 }
 
 function sameOrigin(request) {
@@ -79,8 +71,7 @@ function validateArticle(value) {
 }
 
 async function requireAdmin(request, env) {
-  if (!env.ADMIN_SESSION_SECRET || !await hasSession(request, env.ADMIN_SESSION_SECRET)) return false;
-  return true;
+  return Boolean(env.ADMIN_PASSWORD && await hasSession(request, env));
 }
 
 export async function onRequest({ request, env }) {
@@ -98,11 +89,11 @@ export async function onRequest({ request, env }) {
 
     if (path === "/api/admin/login" && method === "POST") {
       if (!sameOrigin(request)) return json({ error: "Nguồn gửi không hợp lệ." }, 403);
-      if (!env.ADMIN_PASSWORD || !env.ADMIN_SESSION_SECRET || env.ADMIN_SESSION_SECRET.length < 32) return json({ error: "Quản trị viên cần cấu hình ADMIN_PASSWORD và ADMIN_SESSION_SECRET (tối thiểu 32 ký tự) trong Cloudflare." }, 503);
+      if (!env.ADMIN_PASSWORD) return json({ error: "Quản trị viên cần cấu hình ADMIN_PASSWORD trong Cloudflare." }, 503);
       const value = await readBody(request);
       const supplied = String(value.password || "");
       const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-      const throttleKey = bytesToBase64Url(await signature(ip, env.ADMIN_SESSION_SECRET));
+      const throttleKey = bytesToBase64Url(await digest(ip));
       const nowSeconds = Math.floor(Date.now() / 1000);
       const attempts = await env.DB.prepare("SELECT attempts, window_started FROM admin_login_attempts WHERE ip_hash=?").bind(throttleKey).first();
       if (attempts && nowSeconds - attempts.window_started < 900 && attempts.attempts >= 8) return json({ error: "Bạn đã thử nhiều lần. Vui lòng chờ 15 phút rồi thử lại." }, 429);
@@ -119,11 +110,19 @@ export async function onRequest({ request, env }) {
         return json({ error: "Mật khẩu chưa đúng." }, 401);
       }
       await env.DB.prepare("DELETE FROM admin_login_attempts WHERE ip_hash=?").bind(throttleKey).run();
-      const token = await issueSession(env.ADMIN_SESSION_SECRET);
+      const token = createSessionToken();
+      const expiresAt = nowSeconds + 60 * 60 * 12;
+      const tokenDigest = await tokenHash(token);
+      await env.DB.prepare("DELETE FROM admin_sessions WHERE expires_at <= ?").bind(nowSeconds).run();
+      await env.DB.prepare("INSERT INTO admin_sessions (token_hash, expires_at) VALUES (?, ?)").bind(tokenDigest, expiresAt).run();
       return json({ ok: true }, 200, { "set-cookie": `${COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=43200` });
     }
 
-    if (path === "/api/admin/logout" && method === "POST") return json({ ok: true }, 200, { "set-cookie": `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0` });
+    if (path === "/api/admin/logout" && method === "POST") {
+      const token = cookieValue(request, COOKIE);
+      if (token) await env.DB.prepare("DELETE FROM admin_sessions WHERE token_hash=?").bind(await tokenHash(token)).run();
+      return json({ ok: true }, 200, { "set-cookie": `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0` });
+    }
 
     if (!path.startsWith("/api/admin/")) return json({ error: "Không tìm thấy API." }, 404);
     if (!await requireAdmin(request, env)) return json({ error: "Vui lòng đăng nhập lại." }, 401);
