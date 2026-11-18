@@ -8,7 +8,7 @@ const pages = {
     content: `<p class="page-intro">Chia sẻ góc nhìn của bạn với Y-VOICE. Không cần tài khoản.</p>
     <form id="article-form" class="article-form" action="https://formsubmit.co/ajax/insightyouthvoiceclub@gmail.com" method="POST" novalidate>
       <div class="form-row"><label>Họ và tên *<input name="name" autocomplete="name" required maxlength="120"></label><label>Email liên hệ *<input name="email" type="email" autocomplete="email" required maxlength="254"></label></div>
-      <label>Số điện thoại<input name="phone" type="tel" autocomplete="tel" maxlength="30"></label>
+      
       <label>Tiêu đề bài viết *<input name="title" required maxlength="200"></label>
       <label>Chủ đề / Chuyên mục *<select name="category" required><option value="">Chọn chuyên mục</option><option>Tập san</option><option>Podcast</option><option>Bài báo khoa học</option><option>Nghiên cứu</option><option>Chia sẻ</option><option>Khác</option></select></label>
       <label>Nội dung / Mô tả bài viết *<textarea name="content" rows="12" required maxlength="50000"></textarea></label>
@@ -18,8 +18,7 @@ const pages = {
       <label class="consent"><input type="checkbox" name="confirmation" required> <span>Tôi xác nhận nội dung gửi là do mình thực hiện hoặc đã ghi nguồn đầy đủ.</span></label>
       <div class="honeypot" aria-hidden="true"><label>Leave blank<input name="_honey" tabindex="-1" autocomplete="off"></label></div>
       <button class="button primary" type="submit">Gửi bài viết</button>
-      <p class="field-help">Bài viết sẽ được gửi đến Ban Biên tập Y-VOICE để xem xét trước khi đăng tải.</p>
-      <p class="field-help">Thông tin trong form được chuyển qua FormSubmit để gửi email. Nội dung chưa gửi sẽ không được lưu khi rời trang.</p>
+      <p class="field-help">Khi bấm gửi, thông tin liên hệ và bản thảo của bạn sẽ được chuyển qua FormSubmit đến email Ban Biên tập Y-VOICE để xem xét. Bài chưa xuất hiện công khai cho đến khi admin tự tạo và đăng.</p>
       <div id="form-status" role="status" aria-live="polite" tabindex="-1"></div>
     </form>
     <aside class="notice"><strong>Cần hỗ trợ?</strong><p><a href="mailto:insightyouthvoiceclub@gmail.com">insightyouthvoiceclub@gmail.com</a></p><a class="button secondary" href="mailto:insightyouthvoiceclub@gmail.com">Gửi email trực tiếp</a></aside>`
@@ -82,14 +81,10 @@ function wireForm() {
     sending = true; button.disabled = true; button.textContent = 'Đang gửi…';
     status.textContent = 'Đang chuyển bài viết. Vui lòng chờ.';
     try {
-      const result = await submitArticle(Object.fromEntries(new FormData(form)));
-      if (result === 'activation') {
-        status.textContent = 'Hộp thư nhận bài cần được kích hoạt. Ban Biên tập vui lòng kiểm tra email xác nhận FormSubmit. Bài chưa được xác nhận gửi; bạn có thể gửi trực tiếp qua email bên dưới.';
-      } else {
-        status.textContent = 'Gửi bài thành công! Cảm ơn bạn đã gửi bài đến Y-VOICE. Ban Biên tập sẽ xem xét nội dung và liên hệ với bạn khi cần.';
-        form.reset();
-      }
-    } catch {
+      await submitArticle(Object.fromEntries(new FormData(form)));
+      status.textContent = 'Email gửi bài đã được hệ thống chấp nhận. Ban Biên tập sẽ đọc email, tự tạo bài trên trang quản trị và chỉ xuất bản sau khi kiểm tra.';
+      form.reset();
+    } catch (error) {
       status.replaceChildren(document.createTextNode('Không thể gửi bài lúc này. Vui lòng thử lại hoặc gửi trực tiếp qua email: '));
       const link = document.createElement('a'); link.href = 'mailto:' + recipient; link.textContent = recipient; status.append(link);
     } finally {
@@ -98,7 +93,48 @@ function wireForm() {
   });
 }
 
-function route() {
+const categorySlugs = {
+  'Tập san': 'tap-san', 'Podcast': 'podcast', 'Bài báo khoa học': 'bai-bao-khoa-hoc',
+  'Nghiên cứu': 'nghien-cuu', 'Chia sẻ': 'chia-se', 'Khác': 'chia-se'
+};
+
+function addPublishedPost(post, list) {
+  const card = document.createElement('article');
+  card.className = 'post-card';
+  card.dataset.category = categorySlugs[post.category] || 'chia-se';
+  if (post.cover_image) {
+    const image = document.createElement('img'); image.src = post.cover_image; image.alt = `Ảnh bìa: ${post.title}`;
+    image.loading = 'lazy'; card.append(image);
+  }
+  const wrapper = document.createElement('div');
+  const category = document.createElement('span'); category.textContent = post.category;
+  const meta = document.createElement('p'); meta.className = 'post-meta';
+  meta.textContent = post.published_at ? new Date(post.published_at).toLocaleDateString('vi-VN') : 'Y-VOICE';
+  const title = document.createElement('h3'); title.textContent = post.title;
+  const excerpt = document.createElement('p'); excerpt.textContent = post.excerpt || '';
+  const details = document.createElement('details'); details.className = 'post-preview';
+  const summary = document.createElement('summary'); summary.textContent = 'Đọc bài viết';
+  const reading = document.createElement('div'); reading.className = 'post-reading';
+  for (const paragraph of String(post.body || '').split(/\n\s*\n/).filter(Boolean)) {
+    const p = document.createElement('p'); p.textContent = paragraph; reading.append(p);
+  }
+  details.append(summary, reading); wrapper.append(category, meta, title, excerpt, details); card.append(wrapper); list.append(card);
+}
+
+async function loadPublishedPosts(path) {
+  const list = document.querySelector('#app-page [data-news-list]');
+  if (!list) return;
+  try {
+    const response = await fetch('/api/posts', { headers: { Accept: 'application/json' } });
+    if (response.ok) {
+      const data = await response.json();
+      (data.posts || []).forEach(post => addPublishedPost(post, list));
+    }
+  } catch { /* Keep the curated static board visible if the API is unavailable. */ }
+  window.dispatchEvent(new CustomEvent('news-ready', { detail: path.split('/')[2] || 'all' }));
+}
+
+async function route() {
   const requested = location.hash.slice(1);
   const path = requested === 'news' ? '/news' : requested === 'activities' ? '/activities' : requested;
   const active = path.startsWith('/');
@@ -114,7 +150,7 @@ function route() {
     document.title = (isNews ? 'Bảng tin' : 'Hoạt động') + ' | Y-VOICE';
     page.innerHTML = `<div class="container"><a class="back-link" href="#home">← Về Y-VOICE</a></div>`;
     page.append(document.querySelector(isNews ? '#news-template' : '#activities-template').content.cloneNode(true));
-    if (isNews) window.dispatchEvent(new CustomEvent('news-ready', { detail: path.split('/')[2] || 'all' }));
+    if (isNews) await loadPublishedPosts(path);
     window.scrollTo({ top: 0, behavior: 'instant' }); page.focus({ preventScroll: true }); return;
   }
   const entry = pages[path] || { title: 'Không tìm thấy trang', content: '<p>Trang này không tồn tại. <a href="#home">Về trang chủ</a></p>' };

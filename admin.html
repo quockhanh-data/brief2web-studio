@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Quản trị bài viết | Y-VOICE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+  <header class="admin-top"><a class="admin-brand" href="/"><img src="assets/yvoice-mark.png" alt=""><span>Y-VOICE <small>Quản trị nội dung</small></span></a><a class="back-link" href="/">Về trang chính ↗</a></header>
+  <main class="admin-shell">
+    <section id="login-panel" class="admin-login panel">
+      <p class="section-kicker">Ban Biên tập</p><h1>Đăng nhập quản trị</h1><p>Đăng nhập để duyệt bài gửi về và quản lý bảng tin Y-VOICE.</p>
+      <form id="login-form"><label>Mật khẩu quản trị<input name="password" type="password" autocomplete="current-password" required maxlength="256"></label><button class="button primary" type="submit">Đăng nhập</button><p class="admin-message" role="status"></p></form>
+    </section>
+    <section id="dashboard" hidden>
+      <div class="admin-heading"><div><p class="section-kicker">Bảng điều khiển</p><h1>Quản lý bài viết</h1><p>Duyệt bài cộng tác viên, lưu nháp hoặc xuất bản lên bảng tin.</p></div><button id="logout" class="button secondary">Đăng xuất</button></div>
+      <div class="admin-grid">
+        <section class="panel admin-editor"><h2 id="editor-title">Viết bài mới</h2>
+          <form id="article-form">
+            <input type="hidden" name="id">
+            <label>Tiêu đề<input name="title" required maxlength="200"></label>
+            <label>Chuyên mục<select name="category" required><option value="">Chọn chuyên mục</option><option>Tập san</option><option>Podcast</option><option>Bài báo khoa học</option><option>Nghiên cứu</option><option>Chia sẻ</option><option>Khác</option></select></label>
+            <label>Mô tả ngắn<textarea name="excerpt" rows="3" maxlength="500"></textarea></label>
+            <label>Nội dung<textarea name="content" rows="14" required maxlength="50000"></textarea></label>
+            <label>Link ảnh bìa (HTTPS)<input name="image" type="url" placeholder="https://..."></label>
+            <div class="admin-actions"><button class="button secondary" type="submit" name="intent" value="draft">Lưu nháp</button><button class="button primary" type="submit" name="intent" value="published">Đăng bài</button><button id="cancel-edit" type="button" class="button secondary" hidden>Hủy sửa</button></div>
+            <p id="editor-message" class="admin-message" role="status"></p>
+          </form>
+        </section>
+        <section class="panel admin-list"><div class="admin-list-head"><h2>Danh sách bài</h2><button id="refresh" class="button secondary">Làm mới</button></div>
+          <div class="admin-filters" role="group" aria-label="Lọc bài viết"><button data-status="pending">Chờ duyệt cũ</button><button data-status="published">Đã đăng</button><button data-status="draft">Bản nháp</button><button data-status="archived">Đã ẩn</button><button data-status="all" class="active">Tất cả</button></div>
+          <p id="list-message" class="admin-message" role="status"></p><div id="article-list" class="article-list"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

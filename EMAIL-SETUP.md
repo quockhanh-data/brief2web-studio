@@ -1,21 +1,18 @@
-# Y-VOICE — FormSubmit
+# Y-VOICE — Email submissions
 
-Form gửi JSON bằng POST đến https://formsubmit.co/ajax/insightyouthvoiceclub@gmail.com. Không cần tài khoản, database, khóa API hoặc backend. Chỉ hiển thị thành công khi HTTP thành công và dịch vụ trả success=true. Lỗi mạng, HTTP, JSON hoặc success=false hiển thị lỗi, giữ nội dung để thử lại. Phản hồi yêu cầu kích hoạt không hiển thị thành công.
+The public contributor form sends the draft, contact email, name, title, category, references, and document link through FormSubmit to `insightyouthvoiceclub@gmail.com`. The page tells contributors this before they submit. No contributor account is needed and incoming mail does not create a web post.
 
-Không upload file: dùng link tài liệu Google Drive/Word/PDF, hoặc gửi file bằng email trực tiếp. Form có honeypot, kiểm tra bắt buộc, email, link và checkbox; chống gửi lặp khi request đang chạy. Honeypot không thay thế hệ thống chống spam của nhà cung cấp.
+## First-time activation
 
-## Kích hoạt lần đầu
-1. Đưa mã lên nhánh yvoice-insight-hub, GitHub Pages /root.
-2. Gửi một bài kiểm tra từ website công khai.
-3. Mở insightyouthvoiceclub@gmail.com (cả Spam), xác nhận email Activate Form từ FormSubmit. Không chia sẻ link kích hoạt công khai.
-4. Gửi lại một bài kiểm tra và xác nhận email đến, tiêu đề, nội dung và link tài liệu đúng. Chưa thể xác nhận nhận email nếu chưa hoàn thành bước này.
+1. Deploy the current code to the `yvoice-insight-hub` branch and Cloudflare Pages.
+2. Submit a clearly labeled test message from the public form.
+3. The mailbox owner opens `insightyouthvoiceclub@gmail.com` (including Spam) and follows FormSubmit's activation message.
+4. Submit a second test and verify the email, title, content, and links arrived as expected.
 
-Phản hồi success của dịch vụ xác nhận dịch vụ chấp nhận request; không chứng minh email đã đến Inbox. Nếu cần chẩn đoán, kiểm tra Spam và trạng thái dịch vụ. Tài liệu nhà cung cấp: https://formsubmit.co/ajax-documentation và https://formsubmit.co/.
+A successful AJAX response means the service accepted the request; it does not prove delivery to Inbox. Check Spam and the provider status if the message is missing. Do not share the activation link publicly.
 
-## Kiểm tra
-npm install
-npm test
-npm run build
-node tests/browser-check.mjs
+## Editorial workflow
 
-Browser tests chặn/mô phỏng phản hồi nhà cung cấp, không gửi thư thử. Chưa kiểm tra nhận thư thực tế vì cần người quản lý hộp thư kích hoạt và xác nhận. Không có lint trong dự án.
+Read the incoming email, sign in at `/admin.html`, and create a draft from the material approved for publication. Review spelling, permissions, links, and sources, then publish deliberately. The email stays in the mailbox and is not copied into the website automatically.
+
+Do not send attachments through the web form. Contributors can include a share link or email files directly to the club mailbox. Provider documentation: https://formsubmit.co/ajax-documentation and https://formsubmit.co/.

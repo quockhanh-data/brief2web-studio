@@ -1,31 +1,23 @@
-# Handoff Notes
+# Y-VOICE editorial handoff
 
-## Bản hiện tại
+## Publishing
 
-Website đã sẵn sàng để CLB xem demo.
+- Admin dashboard: `/admin.html`.
+- Contributors submit drafts by email through the public form; they do not create web accounts.
+- The editor reads the mailbox, signs in, creates a draft, checks sources and permissions, then publishes deliberately.
+- Only published articles appear in the public news board.
 
-## Cách chỉnh nhanh
+## Deployment and data
 
-- Sửa nội dung: `index.html`
-- Sửa giao diện: `styles.css`
-- Sửa lọc/tìm kiếm: `script.js`
-- Thay ảnh: `assets/`
+- Production branch: `yvoice-insight-hub`.
+- Cloudflare Pages build command: `npm run build`; output directory: `dist`.
+- Cloudflare D1 binding: `DB`; schema: `migrations/0001_articles.sql`.
+- Encrypted admin secrets and FormSubmit first-time activation are described in `CLOUDFLARE-SETUP.md` and `EMAIL-SETUP.md`.
+- Never place admin secrets in GitHub or send them in chat.
 
-## Bảng tin
+## Main files
 
-Mỗi bài viết nằm trong một thẻ:
-
-```html
-<article class="post-card" data-category="podcast">
-```
-
-Đổi `data-category` theo các nhóm:
-
-- `tap-san`
-- `podcast`
-- `su-kien`
-- `ky-nang`
-
-## Deploy
-
-Branch này là bản public của Y-VOICE. Khi đưa lên GitHub Pages, chọn branch `yvoice-insight-hub`.
+- `index.html`, `styles.css`, `script.js`, `app.js`: public website and submission form.
+- `admin.html`, `admin.css`, `admin.js`: editorial dashboard.
+- `functions/api/[[path]].js`: public article feed and protected admin API.
+- `migrations/0001_articles.sql`: articles and login rate-limit tables.

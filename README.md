@@ -1,63 +1,29 @@
 # Y-VOICE Insight Hub
 
-Website tĩnh đặt thiết kế theo yêu cầu cho Insight Youth Voice Club.
+Website Y-VOICE with a public news board, an email submission form for contributors, and an editorial dashboard.
 
-## Project Info
+## Editorial workflow
 
-| Field | Value |
-| --- | --- |
-| Client | Insight Youth Voice Club |
-| Brand | Y-VOICE |
-| Tagline | Tiếng nói lý luận trẻ |
-| Email | insightyouthvoiceclub@gmail.com |
-| Hotline | 0901722998 - Đức Phúc |
-| Facebook | Insight YouthVoice |
+- Contributors send their name, contact email, draft, category, references, and document link to the editorial mailbox through FormSubmit. They do not need an account.
+- The editor reads the email, signs in at `/admin.html`, creates or edits a draft, and chooses when to publish.
+- Only articles explicitly published by an editor appear on the public board.
+- Admin access uses encrypted Cloudflare secrets and a signed secure session cookie.
 
-## Điểm nổi bật
-
-- Landing page nhận diện CLB Y-VOICE.
-- Bố cục học thuật kết hợp phong cách trang tin online.
-- Hero dùng bìa chính thức của CLB.
-- Bảng tin mẫu có lọc chuyên mục và tìm kiếm.
-- Responsive cho desktop và mobile.
-
-## Palette
-
-| Color | Hex | Vai trò |
-| --- | --- | --- |
-| Ink | `#141826` | Nền/heading |
-| Red | `#94111b` | Nhiệt huyết, CTA |
-| Cyan | `#50d3de` | Tri thức, điểm nhấn |
-| Gold | `#d6a344` | Học thuật, phụ trợ |
-
-## Cấu trúc
-
-```text
-.
-├── index.html
-├── styles.css
-├── script.js
-└── assets/
-```
-
-## Chạy thử
+## Run the interface
 
 ```bash
-python -m http.server 4173
+npm install
+npm run dev
 ```
 
-Mở `http://127.0.0.1:4173`.
+Cloudflare Pages Functions require a D1 binding named `DB`. See [CLOUDFLARE-SETUP.md](CLOUDFLARE-SETUP.md) for setup steps and the email activation workflow.
 
-## Deploy GitHub Pages
+## Cloudflare Pages
 
-Trong repo tổng `brief2web-studio`, chọn:
+- Repository: `quockhanh-data/brief2web-studio`
+- Production branch: `yvoice-insight-hub`
+- Build command: `npm run build`
+- Build output: `dist`
+- Intended address: `https://y-voice.pages.dev`
 
-- Branch: `yvoice-insight-hub`
-- Folder: `/root`
-
-## Nội dung cần thay sau khi CLB duyệt
-
-- Bài viết thật trong khu `Bảng tin`.
-- Link Facebook chính thức nếu có username đẹp.
-- Ảnh hoạt động/tọa đàm/podcast thật.
-- Domain trường khi được cấp.
+The Pages address becomes active after the project deploys successfully and its database and secrets are configured.
